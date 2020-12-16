@@ -90,7 +90,10 @@ class ValidateMiddleware
         $validateClass = new $class();
         if ($scene) {
             // 自行决定使用何种场景
-            if ('?' === $scene && $validateClass instanceof AskSceneInterface) {
+            if (
+                '?' === $scene
+                && ($validateClass instanceof AskSceneInterface || method_exists($validateClass, 'askScene'))
+            ) {
                 $scene = $validateClass->askScene($request) ?: false;
             }
             // 选中验证场景
