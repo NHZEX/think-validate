@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+namespace Zxin\Think\Validate;
+
+use Exception;
+use think\App;
+
+foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+    if (file_exists($file)) {
+        /** @noinspection PhpIncludeInspection */
+        require $file;
+        break;
+    }
+}
+if (!isset($file)) {
+    throw new Exception('autoload.php file does not exist');
+}
+
+App::getInstance()->initialize();
+
+ValidateDump::dump();

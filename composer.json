@@ -36,6 +36,9 @@
             "Zxin\\Tests\\": "tests/"
         }
     },
+    "bin": [
+        "validate-dump"
+    ],
     "extra": {
         "think": {
             "services": [
