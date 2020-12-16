@@ -69,7 +69,7 @@ class ValidateMiddleware
 
         // todo 转存匹配
 
-        // todo 注解匹配
+        // 注解匹配
         $annotation = $this->parseAnnotation($controllerClass, $controllerAction);
         if ($annotation !== null) {
             $validateClass = $annotation->value;
@@ -84,7 +84,7 @@ class ValidateMiddleware
         return $next($request);
     }
 
-    protected function execValidate(Request $request, string $class, string $scene): ?Response
+    protected function execValidate(Request $request, string $class, ?string $scene): ?Response
     {
         /** @var Validate $validateClass */
         $validateClass = new $class();
