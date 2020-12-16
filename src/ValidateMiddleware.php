@@ -105,7 +105,7 @@ class ValidateMiddleware
             $message = is_array($validateClass->getError()) ? join(',', $validateClass->getError()) : $validateClass->getError();
             return Response::create($message, 'html', 400);
         }
-        if ($validateClass instanceof ValidateBase) {
+        if (method_exists($validateClass, 'getRuleKeys')) {
             $request->withMiddleware([
                 'allow_input_fields' => $validateClass->getRuleKeys(),
             ]);
