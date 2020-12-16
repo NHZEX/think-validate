@@ -67,7 +67,18 @@ class ValidateMiddleware
         $controllerClass = $this->getControllerClassName($request);
         $controllerAction = $request->action(true);
 
-        // todo 转存匹配
+        // 转存匹配
+        $storage = $this->app->get('validateStorage');
+        if (is_array($storage)) {
+            if ($v = $storage[$controllerClass][$controllerAction] ?? null) {
+                $result = $this->execValidate($request, $v['validate'], $v['scene']);
+                if ($result) {
+                    return $result;
+                } else {
+                    return $next($request);
+                }
+            }
+        }
 
         // 注解匹配
         $annotation = $this->parseAnnotation($controllerClass, $controllerAction);
