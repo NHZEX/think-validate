@@ -13,7 +13,7 @@ abstract class ValidateBase extends Validate
      * 获取当前验证器生效的字段
      * @return array
      */
-    public function getRuleKeys(): array
+    final public function getRuleKeys(): array
     {
         $rules = $this->rule;
 
