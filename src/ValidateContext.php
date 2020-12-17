@@ -1,0 +1,110 @@
+<?php
+declare(strict_types=1);
+
+namespace Zxin\Think\Validate;
+
+use think\Validate;
+use function app;
+
+class ValidateContext
+{
+    /**
+     * @var string class name
+     */
+    protected $controller;
+
+    /**
+     * @var string class name
+     */
+    protected $method;
+
+    /**
+     * @var Validate
+     */
+    protected $validate;
+
+    /**
+     * @var bool
+     */
+    protected $success;
+
+    /**
+     * @var string[]
+     */
+    protected $inputFields;
+
+    /**
+     * AuthContext constructor.
+     */
+    protected function __construct()
+    {
+    }
+
+    /**
+     * @return ValidateContext|object|null
+     */
+    public static function get(): ?ValidateContext
+    {
+        $app = app();
+        return $app->has(ValidateContext::class) ? $app->get(ValidateContext::class) : null;
+    }
+
+    /**
+     * @param string   $controller
+     * @param string   $method
+     * @param Validate $validate
+     * @param string[] $inputFields
+     * @param string   $success
+     * @return ValidateContext
+     */
+    public static function create(
+        string $controller,
+        string $method,
+        Validate $validate,
+        string $success,
+        array $inputFields
+    ): ValidateContext
+    {
+        $ctx              = new ValidateContext();
+        $ctx->controller  = $controller;
+        $ctx->method      = $method;
+        $ctx->validate    = $validate;
+        $ctx->success     = $success;
+        $ctx->inputFields = $inputFields;
+
+        app()->bind(ValidateContext::class, $ctx);
+        return $ctx;
+    }
+
+    /**
+     * @return string
+     */
+    public function getController(): string
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return Validate
+     */
+    public function getValidate(): Validate
+    {
+        return $this->validate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getInputFields(): array
+    {
+        return $this->inputFields;
+    }
+}

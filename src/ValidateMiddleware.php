@@ -73,7 +73,7 @@ class ValidateMiddleware
         $storage = $this->app->get('validateStorage');
         if (is_array($storage)) {
             if ($v = $storage[$controllerClass][$controllerAction] ?? null) {
-                $result = $this->execValidate($request, $v['validate'], $v['scene']);
+                $result = $this->execValidate($request, $controllerClass, $controllerAction, $v['validate'], $v['scene']);
                 if ($result !== null) {
                     return $result;
                 } else {
@@ -87,7 +87,7 @@ class ValidateMiddleware
         if ($annotation !== null) {
             $validateClass = $annotation->value;
             $validateScene = $annotation->scene;
-            $result = $this->execValidate($request, $validateClass, $validateScene);
+            $result = $this->execValidate($request, $controllerClass, $controllerAction, $validateClass, $validateScene);
             if ($result !== null) {
                 return $result;
             }
@@ -97,7 +97,7 @@ class ValidateMiddleware
         return $next($request);
     }
 
-    protected function execValidate(Request $request, string $class, ?string $scene): ?Response
+    protected function execValidate(Request $request, $controllerClass, $controllerAction, string $class, ?string $scene): ?Response
     {
         /** @var Validate $validateClass */
         $validateClass = new $class();
@@ -117,22 +117,28 @@ class ValidateMiddleware
             $input += $files;
         }
         if (false === $validateClass->check($input)) {
+            $ctx = ValidateContext::create($controllerClass, $controllerAction, $validateClass, false, []);
             if ($this->errorHandle) {
                 /** @var ErrorHandleInterface $errorHandle */
                 $errorHandle = $this->app->make($this->errorHandle);
                 if ($errorHandle instanceof ErrorHandleInterface === false) {
                     throw new ValidateException('errorHandle not implement ' . ErrorHandleInterface::class);
                 }
-                return $errorHandle->handle($request, $validateClass);
+                return $errorHandle->handle($request, $ctx);
             }
             $message = is_array($validateClass->getError()) ? join(',', $validateClass->getError()) : $validateClass->getError();
             return Response::create($message, 'html', 400);
         }
+        $allowInputFields = [];
+        /** todo 使用父类判断 */
         if (method_exists($validateClass, 'getRuleKeys')) {
-            $request->withMiddleware([
-                'allow_input_fields' => $validateClass->getRuleKeys(),
-            ]);
+            $allowInputFields = $validateClass->getRuleKeys();
         }
+        /** todo 弃用方法 */
+        $request->withMiddleware([
+            'allow_input_fields' => $allowInputFields,
+        ]);
+        ValidateContext::create($controllerClass, $controllerAction, $validateClass, true, $allowInputFields);
         return null;
     }
 
@@ -161,7 +167,7 @@ class ValidateMiddleware
 
             // 验证输入数据
             if ($validateClass && class_exists($validateClass)) {
-                $result = $this->execValidate($request, $validateClass, $validateScene);
+                $result = $this->execValidate($request, $controllerClass, $controllerAction, $validateClass, $validateScene);
                 if ($result) {
                     return $result;
                 }
