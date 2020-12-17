@@ -21,8 +21,12 @@ trait ValidateFilterTrait
      */
     protected function getAllowInputFields(): array
     {
+        $ctx = ValidateContext::get();
+        if ($ctx === null) {
+            return [];
+        }
         if ($this->allowInputFields === null) {
-            $this->allowInputFields = $this->request->middleware('allow_input_fields', []);
+            $this->allowInputFields = $ctx->getInputFields();
         }
         return $this->allowInputFields;
     }
