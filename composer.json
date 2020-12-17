@@ -15,6 +15,7 @@
         "doctrine/annotations": "^1.10",
         "symfony/finder": "^4.2|^5.1",
         "symfony/polyfill-php80": "^1.18",
+        "symfony/var-exporter": "^4.2|^5.2",
         "topthink/framework": "^6.0.5",
         "zxin/utils": "^2.0"
     },
