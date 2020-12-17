@@ -8,6 +8,8 @@ use think\exception\HttpException;
 use think\Request;
 use think\Response;
 use think\Validate;
+use function is_array;
+use function join;
 
 class ValidateMiddleware
 {
@@ -72,7 +74,7 @@ class ValidateMiddleware
         if (is_array($storage)) {
             if ($v = $storage[$controllerClass][$controllerAction] ?? null) {
                 $result = $this->execValidate($request, $v['validate'], $v['scene']);
-                if ($result) {
+                if ($result !== null) {
                     return $result;
                 } else {
                     return $next($request);
@@ -86,7 +88,7 @@ class ValidateMiddleware
             $validateClass = $annotation->value;
             $validateScene = $annotation->scene;
             $result = $this->execValidate($request, $validateClass, $validateScene);
-            if ($result) {
+            if ($result !== null) {
                 return $result;
             }
         } else {
@@ -115,7 +117,14 @@ class ValidateMiddleware
             $input += $files;
         }
         if (false === $validateClass->check($input)) {
-            // todo $this->app->make($this->errorHandle);
+            if ($this->errorHandle) {
+                /** @var ErrorHandleInterface $errorHandle */
+                $errorHandle = $this->app->make($this->errorHandle);
+                if ($errorHandle instanceof ErrorHandleInterface) {
+                    throw new ValidateException('errorHandle not implement ' . ErrorHandleInterface::class);
+                }
+                return $errorHandle->handle($request, $validateClass);
+            }
             $message = is_array($validateClass->getError()) ? join(',', $validateClass->getError()) : $validateClass->getError();
             return Response::create($message, 'html', 400);
         }
