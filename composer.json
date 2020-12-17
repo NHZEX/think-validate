@@ -45,7 +45,7 @@
             "services": [
             ],
             "config": {
-                "auth": "config/validate.php"
+                "validate": "config/validate.php"
             }
         }
     },
