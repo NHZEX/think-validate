@@ -7,5 +7,10 @@ use think\Request;
 
 interface AskValidateInterface
 {
-    public static function askValidate(Request $request): ?string;
+    /**
+     * @param Request     $request
+     * @param string|null $scene
+     * @return string|array
+     */
+    public static function askValidate(Request $request, ?string $scene);
 }

@@ -8,9 +8,13 @@ use think\exception\HttpException;
 use think\Request;
 use think\Response;
 use think\Validate;
+use function count;
+use function get_class;
 use function is_array;
+use function is_string;
 use function is_subclass_of;
 use function join;
+use function sprintf;
 
 class ValidateMiddleware
 {
@@ -101,9 +105,14 @@ class ValidateMiddleware
     protected function execValidate(Request $request, $controllerClass, $controllerAction, string $class, ?string $scene): ?Response
     {
         if (is_subclass_of($class, AskValidateInterface::class)) {
-            $result = $class::askValidate($request);
+            $result = $class::askValidate($request, $scene);
             if ($result) {
-                $class = $result;
+                if (is_string($result)) {
+                    $class = $result;
+                } elseif (is_array($result) && count($result) > 1) {
+                    $class = $result[0];
+                    $scene = $result[1] ?? null;
+                }
             }
         }
         /** @var Validate $validateClass */
@@ -118,6 +127,9 @@ class ValidateMiddleware
             }
             // 选中验证场景
             $scene && $validateClass->scene($scene);
+        }
+        if ($this->app->isDebug()) {
+            $this->app->log->record(sprintf('[validate] %s, scene=%s', get_class($validateClass), $scene ?: 'null'), 'debug');
         }
         $input = $request->param();
         if ($files = $request->file()) {
