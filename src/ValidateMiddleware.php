@@ -9,6 +9,7 @@ use think\Request;
 use think\Response;
 use think\Validate;
 use function is_array;
+use function is_subclass_of;
 use function join;
 
 class ValidateMiddleware
@@ -99,6 +100,12 @@ class ValidateMiddleware
 
     protected function execValidate(Request $request, $controllerClass, $controllerAction, string $class, ?string $scene): ?Response
     {
+        if (is_subclass_of($class, AskValidateInterface::class)) {
+            $result = $class::askValidate($request);
+            if ($result) {
+                $class = $result;
+            }
+        }
         /** @var Validate $validateClass */
         $validateClass = new $class();
         if ($scene) {
