@@ -22,7 +22,9 @@ class ValidateDump
 
     public static function dump()
     {
+        echo '====== ValidateDump ======' . PHP_EOL;
         (new self())->scanAnnotation();
+        echo '========== DONE ==========' . PHP_EOL;
     }
 
     public function __construct()
@@ -46,10 +48,12 @@ class ValidateDump
                 if ($validation === null) {
                     continue;
                 }
-                $result[$class][$method] = [
+                $validate = [
                     'validate' => $validation->value,
                     'scene' => empty($validation->scene) ? null : $validation->scene,
                 ];
+                $result[$class][$method] = $validate;
+                echo "> {$class}@{$method}\t => {$validate['validate']}" . ($validate['scene'] ? "@{$validate['scene']}" : '') . PHP_EOL;
             }
         }
 
