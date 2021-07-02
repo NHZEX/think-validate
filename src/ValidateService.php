@@ -39,7 +39,7 @@ class ValidateService extends Service
         return $this->storage;
     }
 
-    public static function getDumpFilePath(string $filename = 'validate.php'): string
+    public static function getDumpFilePath(string $filename = 'validate_storage.php'): string
     {
         $path = App::getInstance()->config->get('validate.dump_file_path');
         if (empty($path)) {
