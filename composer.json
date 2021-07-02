@@ -35,7 +35,7 @@
         }
     },
     "bin": [
-        "validate-dump"
+        "bin/dump-validate"
     ],
     "extra": {
         "think": {
