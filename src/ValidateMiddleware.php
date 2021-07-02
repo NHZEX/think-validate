@@ -102,6 +102,15 @@ class ValidateMiddleware
         return $next($request);
     }
 
+    /**
+     * @param Request     $request
+     * @param             $controllerClass
+     * @param             $controllerAction
+     * @param string      $class
+     * @param string|null $scene
+     * @return Response|null
+     * @throws ValidateException
+     */
     protected function execValidate(Request $request, $controllerClass, $controllerAction, string $class, ?string $scene): ?Response
     {
         if (is_subclass_of($class, AskValidateInterface::class)) {
@@ -149,14 +158,13 @@ class ValidateMiddleware
             return Response::create($message, 'html', 400);
         }
         $allowInputFields = [];
-        /** todo 使用父类判断 */
-        if (method_exists($validateClass, 'getRuleKeys')) {
+        if ($validateClass instanceof ValidateBase) {
             $allowInputFields = $validateClass->getRuleKeys();
+        } elseif (method_exists($validateClass, 'getRuleKeys')) {
+            throw new ValidateException(
+                sprintf('Must extends the %s class', ValidateBase::class)
+            );
         }
-        /** todo 弃用方法 */
-        $request->withMiddleware([
-            'allow_input_fields' => $allowInputFields,
-        ]);
         ValidateContext::create($controllerClass, $controllerAction, $validateClass, true, $allowInputFields);
         return null;
     }
