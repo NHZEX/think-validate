@@ -3,7 +3,9 @@
 namespace Zxin\Think\Validate;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use think\App;
 use think\Service;
+use function str_replace;
 
 class ValidateService extends Service
 {
@@ -35,5 +37,18 @@ class ValidateService extends Service
             $this->storage = require $filename;
         }
         return $this->storage;
+    }
+
+    public static function getDumpFilePath(string $filename = 'validate.php'): string
+    {
+        $path = App::getInstance()->config->get('validate.dump_file_path');
+        if (empty($path)) {
+            $path = App::getInstance()->getAppPath();
+        }
+        $path = str_replace('\\', '/', $path);
+        if (!str_ends_with($path, '/')) {
+            $path .= '/';
+        }
+        return $path . $filename;
     }
 }

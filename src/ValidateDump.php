@@ -57,7 +57,7 @@ class ValidateDump
             }
         }
 
-        $dump = new DumpValue(app_path() . 'validate_storage.php');
+        $dump = new DumpValue(ValidateService::getDumpFilePath());
         $dump->load();
         $dump->save($result);
     }

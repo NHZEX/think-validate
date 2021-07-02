@@ -11,6 +11,7 @@ use think\Validate;
 use function count;
 use function get_class;
 use function is_array;
+use function is_file;
 use function is_string;
 use function is_subclass_of;
 use function join;
@@ -53,7 +54,7 @@ class ValidateMiddleware
     public function init()
     {
         $this->app = \app();
-        if (file_exists($path = $this->app->getAppPath() . 'validate.php')) {
+        if (is_file($path = ValidateService::getDumpFilePath())) {
             /** @noinspection PhpIncludeInspection */
             $this->mapping = require $path;
         }
