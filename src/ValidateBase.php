@@ -5,7 +5,7 @@ namespace Zxin\Think\Validate;
 use think\Validate;
 use function explode;
 use function in_array;
-use function strpos;
+use function str_contains;
 
 abstract class ValidateBase extends Validate
 {
@@ -17,11 +17,6 @@ abstract class ValidateBase extends Validate
     {
         $rules = $this->rule;
 
-        // 如果thinkphp同意调整场景优先级，应该不用在加载场景
-        if ($this->currentScene) {
-            $this->getScene($this->currentScene);
-        }
-
         foreach ($this->append as $key => $rule) {
             if (!isset($rules[$key])) {
                 $rules[$key] = $rule;
@@ -31,7 +26,7 @@ abstract class ValidateBase extends Validate
         $result = [];
 
         foreach ($rules as $key => $rule) {
-            if (strpos($key, '|')) {
+            if (str_contains($key, '|')) {
                 // 字段|描述 用于指定属性名称
                 [$key] = explode('|', $key);
             }
@@ -43,7 +38,11 @@ abstract class ValidateBase extends Validate
 
             if (isset($this->remove[$key]) && true === $this->remove[$key] && empty($this->append[$key])) {
                 // 字段已经移除 无需验证
-                // todo 规则已全部移除的判断
+                continue;
+            }
+
+            if (empty($rule)) {
+                // 规则为空 无需验证
                 continue;
             }
 
