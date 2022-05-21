@@ -33,7 +33,6 @@ class ValidateService extends Service
     {
         if (empty($this->storage)) {
             $filename = app_path() . 'validate_storage.php';
-            /** @noinspection PhpIncludeInspection */
             $this->storage = require $filename;
         }
         return $this->storage;

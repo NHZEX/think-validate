@@ -3,22 +3,33 @@
 namespace Zxin\Think\Validate\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * Class Validation
  * @package Zxin\Think\Validate\Annotation
  * @Annotation
  * @Annotation\Target({"CLASS", "METHOD"})
+ * @NamedArgumentConstructor
  */
-class Validation extends Annotation
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+final class Validation
 {
     /**
      * @var string
      */
-    public $value = '';
+    public string $name;
 
     /**
      * @var string
      */
-    public $scene = '';
+    public string $scene;
+
+    public function __construct(
+        string $name,
+        string $scene = ''
+    ) {
+        $this->name = $name;
+        $this->scene = $scene;
+    }
 }

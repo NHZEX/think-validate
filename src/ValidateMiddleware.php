@@ -55,7 +55,6 @@ class ValidateMiddleware
     {
         $this->app = \app();
         if (is_file($path = ValidateService::getDumpFilePath())) {
-            /** @noinspection PhpIncludeInspection */
             $this->mapping = require $path;
         }
         $this->namespace = $this->app->config->get('validate.namespace', 'app\\Validate');
@@ -91,7 +90,7 @@ class ValidateMiddleware
         // 注解匹配
         $annotation = $this->parseAnnotation($controllerClass, $controllerAction);
         if ($annotation !== null) {
-            $validateClass = $annotation->value;
+            $validateClass = $annotation->name;
             $validateScene = $annotation->scene;
             $result = $this->execValidate($request, $controllerClass, $controllerAction, $validateClass, $validateScene);
             if ($result !== null) {

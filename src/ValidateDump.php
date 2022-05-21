@@ -49,7 +49,7 @@ class ValidateDump
                     continue;
                 }
                 $validate = [
-                    'validate' => $validation->value,
+                    'validate' => $validation->name,
                     'scene' => empty($validation->scene) ? null : $validation->scene,
                 ];
                 $result[$class][$method] = $validate;

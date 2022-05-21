@@ -38,7 +38,15 @@ trait InteractsWithAnnotation
         if (str_starts_with($methodName, '_')) {
             return null;
         }
-        $annotations = $reader->getMethodAnnotations($refMethod);
+        $annotations = [];
+        if (PHP_VERSION_ID >= 80000) {
+            foreach ($refMethod->getAttributes(Validation::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                $annotations[] = $attribute->newInstance();
+            }
+        }
+        if (empty($annotations)) {
+            $annotations = $reader->getMethodAnnotations($refMethod);
+        }
         foreach ($annotations as $annotation) {
             if ($annotation instanceof Validation) {
                 $result = $this->parseValidation($annotation, $method);
