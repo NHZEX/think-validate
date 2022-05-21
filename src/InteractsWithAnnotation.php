@@ -7,6 +7,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use ReflectionException;
 use think\Validate;
+use function dump;
+use function var_dump;
 
 /**
  * Trait InteractsWithAnnotation
@@ -60,13 +62,13 @@ trait InteractsWithAnnotation
 
     public function parseValidation(Validation $validation, string $method): ?Validation
     {
-        if (empty($validation->value)) {
+        if (empty($validation->name)) {
             return null;
         }
-        if (str_starts_with($validation->value, '@')) {
-            $class = $this->namespace . str_replace('.', '\\', substr($validation->value, 1));
-        } elseif (str_starts_with($validation->value, '\\')) {
-            $class = $validation->value;
+        if (str_starts_with($validation->name, '@')) {
+            $class = $this->namespace . str_replace('.', '\\', substr($validation->name, 1));
+        } elseif (str_starts_with($validation->name, '\\')) {
+            $class = $validation->name;
         } else {
             return null;
         }
@@ -74,7 +76,7 @@ trait InteractsWithAnnotation
             return null;
         }
         $validation = clone $validation;
-        $validation->value = $class;
+        $validation->name = $class;
         if ($validation->scene === '_') {
             $validation->scene = $method;
         }

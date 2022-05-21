@@ -5,6 +5,7 @@ namespace Zxin\Think\Validate;
 use think\App;
 use Zxin\Think\Annotation\DumpValue;
 use Zxin\Think\Annotation\Scanning;
+use function var_dump;
 
 class ValidateDump
 {
