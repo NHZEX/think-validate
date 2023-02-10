@@ -2,7 +2,6 @@
 
 namespace Zxin\Think\Validate;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use think\App;
 use think\Service;
 use function str_replace;
@@ -21,8 +20,6 @@ class ValidateService extends Service
         $this->app->bind('validateStorage', function () {
             return $this->loadStorage() ?: [];
         });
-
-        AnnotationRegistry::registerLoader('class_exists');
     }
 
     public function boot()

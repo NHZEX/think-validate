@@ -11,10 +11,10 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "doctrine/annotations": "^1.13",
+        "doctrine/annotations": "^2.0",
         "symfony/polyfill-php80": "^1.25",
-        "topthink/framework": "^6.0.5",
-        "zxin/think-annotation": "^1.0.3",
+        "topthink/framework": "^6.0.5|^6.1|^8.0",
+        "zxin/think-annotation": "2.x-dev",
         "zxin/utils": "^2.3"
     },
     "require-dev": {
