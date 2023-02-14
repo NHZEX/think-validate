@@ -41,7 +41,7 @@ class ValidateContext
     }
 
     /**
-     * @return ValidateContext|object|null
+     * @return ValidateContext|null
      */
     public static function get(): ?ValidateContext
     {
@@ -54,14 +54,14 @@ class ValidateContext
      * @param string   $method
      * @param Validate $validate
      * @param string[] $inputFields
-     * @param string   $success
+     * @param bool     $success
      * @return ValidateContext
      */
     public static function create(
         string $controller,
         string $method,
         Validate $validate,
-        string $success,
+        bool $success,
         array $inputFields
     ): ValidateContext
     {

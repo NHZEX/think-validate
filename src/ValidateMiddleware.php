@@ -149,7 +149,7 @@ class ValidateMiddleware
             if ($this->errorHandle) {
                 /** @var ErrorHandleInterface $errorHandle */
                 $errorHandle = $this->app->make($this->errorHandle);
-                if ($errorHandle instanceof ErrorHandleInterface === false) {
+                if (!($errorHandle instanceof ErrorHandleInterface)) {
                     throw new ValidateException('errorHandle not implement ' . ErrorHandleInterface::class);
                 }
                 return $errorHandle->handle($request, $ctx);
@@ -206,7 +206,7 @@ class ValidateMiddleware
 
     /**
      * @param Request $request
-     * @return mixed
+     * @return string|null
      */
     protected function getControllerClassName(Request $request): ?string
     {
