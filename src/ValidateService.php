@@ -8,18 +8,13 @@ use function str_replace;
 
 class ValidateService extends Service
 {
-    /**
-     * @var array
-     */
-    public $storage;
+    public array $storage;
 
     public function register()
     {
         $this->app->middleware->add(ValidateMiddleware::class, 'controller');
 
-        $this->app->bind('validateStorage', function () {
-            return $this->loadStorage() ?: [];
-        });
+        $this->app->bind('validateStorage', fn () => $this->loadStorage() ?: []);
     }
 
     public function boot()

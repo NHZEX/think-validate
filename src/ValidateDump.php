@@ -11,15 +11,9 @@ class ValidateDump
 {
     use InteractsWithAnnotation;
 
-    /**
-     * @var App
-     */
-    protected $app;
+    protected App $app;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
     public static function dump()
     {

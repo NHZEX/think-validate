@@ -9,30 +9,18 @@ use function app;
 
 class ValidateContext
 {
-    /**
-     * @var string class name
-     */
-    protected $controller;
+    protected string $controller;
 
-    /**
-     * @var string class name
-     */
-    protected $method;
+    protected string $method;
 
-    /**
-     * @var Validate
-     */
-    protected $validate;
+    protected Validate $validate;
 
-    /**
-     * @var bool
-     */
-    protected $success;
+    protected bool $success;
 
     /**
      * @var string[]
      */
-    protected $inputFields;
+    protected array $inputFields;
 
     /**
      * AuthContext constructor.

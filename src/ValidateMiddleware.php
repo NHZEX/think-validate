@@ -22,29 +22,17 @@ class ValidateMiddleware
     use InteractsWithAnnotation;
 
     /**
-     * @var array 验证器映射
+     * 验证器映射
      */
-    protected $mapping = [];
+    protected array $mapping = [];
 
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
-    /**
-     * @var string
-     */
-    protected $errorHandle;
+    protected ?string $errorHandle;
 
-    /**
-     * @var App
-     */
-    protected $app;
+    protected App $app;
 
     public function __construct()
     {
@@ -147,7 +135,7 @@ class ValidateMiddleware
         if (false === $validateClass->check($input)) {
             $ctx = ValidateContext::create($controllerClass, $controllerAction, $validateClass, false, []);
             if ($this->errorHandle) {
-                /** @var ErrorHandleInterface $errorHandle */
+                /** @var ErrorHandleInterface|object $errorHandle */
                 $errorHandle = $this->app->make($this->errorHandle);
                 if (!($errorHandle instanceof ErrorHandleInterface)) {
                     throw new ValidateException('errorHandle not implement ' . ErrorHandleInterface::class);
