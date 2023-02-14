@@ -26,13 +26,13 @@ abstract class ValidateBase extends Validate
         $result = [];
 
         foreach ($rules as $key => $rule) {
-            if (str_contains($key, '|')) {
+            if (\str_contains($key, '|')) {
                 // 字段|描述 用于指定属性名称
-                [$key] = explode('|', $key);
+                [$key] = \explode('|', $key);
             }
 
             // 场景检测
-            if (!empty($this->only) && !in_array($key, $this->only)) {
+            if (!empty($this->only) && !\in_array($key, $this->only)) {
                 continue;
             }
 

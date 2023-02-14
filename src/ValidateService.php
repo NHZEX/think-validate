@@ -41,7 +41,7 @@ class ValidateService extends Service
         if (empty($path)) {
             $path = App::getInstance()->getAppPath();
         }
-        $path = str_replace('\\', '/', $path);
+        $path = \str_replace('\\', '/', $path);
         if (!str_ends_with($path, '/')) {
             $path .= '/';
         }

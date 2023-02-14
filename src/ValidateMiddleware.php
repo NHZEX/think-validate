@@ -53,8 +53,8 @@ class ValidateMiddleware
 
     public function init()
     {
-        $this->app = \app();
-        if (is_file($path = ValidateService::getDumpFilePath())) {
+        $this->app = app();
+        if (\is_file($path = ValidateService::getDumpFilePath())) {
             $this->mapping = require $path;
         }
         $this->namespace = $this->app->config->get('validate.namespace', 'app\\Validate');
@@ -76,7 +76,7 @@ class ValidateMiddleware
 
         // 转存匹配
         $storage = $this->app->get('validateStorage');
-        if (is_array($storage)) {
+        if (\is_array($storage)) {
             if ($v = $storage[$controllerClass][$controllerAction] ?? null) {
                 $result = $this->execValidate($request, $controllerClass, $controllerAction, $v['validate'], $v['scene']);
                 if ($result !== null) {
@@ -113,12 +113,12 @@ class ValidateMiddleware
      */
     protected function execValidate(Request $request, $controllerClass, $controllerAction, string $class, ?string $scene): ?Response
     {
-        if (is_subclass_of($class, AskValidateInterface::class)) {
+        if (\is_subclass_of($class, AskValidateInterface::class)) {
             $result = $class::askValidate($request, $scene);
             if ($result) {
-                if (is_string($result)) {
+                if (\is_string($result)) {
                     $class = $result;
-                } elseif (is_array($result) && count($result) > 1) {
+                } elseif (\is_array($result) && \count($result) > 1) {
                     $class = $result[0];
                     $scene = $result[1] ?? null;
                 }
@@ -138,7 +138,7 @@ class ValidateMiddleware
             $scene && $validateClass->scene($scene);
         }
         if ($this->app->isDebug()) {
-            $this->app->log->record(sprintf('[validate] %s, scene=%s', get_class($validateClass), $scene ?: 'null'), 'debug');
+            $this->app->log->record(\sprintf('[validate] %s, scene=%s', \get_class($validateClass), $scene ?: 'null'), 'debug');
         }
         $input = $request->param();
         if ($files = $request->file()) {
@@ -154,7 +154,7 @@ class ValidateMiddleware
                 }
                 return $errorHandle->handle($request, $ctx);
             }
-            $message = is_array($validateClass->getError()) ? join(',', $validateClass->getError()) : $validateClass->getError();
+            $message = \is_array($validateClass->getError()) ? \join(',', $validateClass->getError()) : $validateClass->getError();
             return Response::create($message, 'html', 400);
         }
         $allowInputFields = [];
@@ -162,7 +162,7 @@ class ValidateMiddleware
             $allowInputFields = $validateClass->getRuleKeys();
         } elseif (method_exists($validateClass, 'getRuleKeys')) {
             throw new ValidateException(
-                sprintf('Must extends the %s class', ValidateBase::class)
+                \sprintf('Must extends the %s class', ValidateBase::class)
             );
         }
         ValidateContext::create($controllerClass, $controllerAction, $validateClass, true, $allowInputFields);
@@ -183,10 +183,10 @@ class ValidateMiddleware
             return $next($request);
         }
         $validateCfg = array_change_key_case($this->mapping[$controllerClass])[$controllerAction] ?? false;
-        if (is_array($validateCfg)) {
+        if (\is_array($validateCfg)) {
             // 解析验证配置
             $validateCfg = array_pad($validateCfg, 3, null);
-            if (is_string($validateCfg[0])) {
+            if (\is_string($validateCfg[0])) {
                 [$validateClass, $validateScene] = $validateCfg;
             } else {
                 [, $validateClass, $validateScene] = $validateCfg;

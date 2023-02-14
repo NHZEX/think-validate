@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zxin\Think\Validate;
@@ -45,7 +46,7 @@ class ValidateContext
      */
     public static function get(): ?ValidateContext
     {
-        $app = app();
+        $app = \app();
         return $app->has(ValidateContext::class) ? $app->get(ValidateContext::class) : null;
     }
 
@@ -63,8 +64,7 @@ class ValidateContext
         Validate $validate,
         bool $success,
         array $inputFields
-    ): ValidateContext
-    {
+    ): ValidateContext {
         $ctx              = new ValidateContext();
         $ctx->controller  = $controller;
         $ctx->method      = $method;
@@ -72,7 +72,7 @@ class ValidateContext
         $ctx->success     = $success;
         $ctx->inputFields = $inputFields;
 
-        app()->bind(ValidateContext::class, $ctx);
+        \app()->bind(ValidateContext::class, $ctx);
         return $ctx;
     }
 

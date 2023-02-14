@@ -30,7 +30,7 @@ class ValidateDump
 
     public function __construct()
     {
-        $this->app = \app();
+        $this->app = app();
 
         $this->namespace = $this->app->config->get('validate.namespace', 'app\\Validate');
         if (!str_ends_with($this->namespace, '\\')) {

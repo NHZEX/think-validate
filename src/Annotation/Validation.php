@@ -4,6 +4,7 @@ namespace Zxin\Think\Validate\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use Attribute;
 
 /**
  * Class Validation
@@ -12,7 +13,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Annotation\Target({"CLASS", "METHOD"})
  * @NamedArgumentConstructor
  */
-#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 final class Validation
 {
     /**

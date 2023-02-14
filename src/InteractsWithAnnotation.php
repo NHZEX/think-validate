@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use ReflectionException;
 use think\Validate;
+use ReflectionAttribute;
 use function dump;
 use function var_dump;
 
@@ -42,7 +43,7 @@ trait InteractsWithAnnotation
         }
         $annotations = [];
         if (PHP_VERSION_ID >= 80000) {
-            foreach ($refMethod->getAttributes(Validation::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+            foreach ($refMethod->getAttributes(Validation::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $annotations[] = $attribute->newInstance();
             }
         }
