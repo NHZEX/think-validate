@@ -68,7 +68,10 @@ trait InteractsWithAnnotation
         }
         if (str_starts_with($validation->name, '@')) {
             $class = $this->namespace . str_replace('.', '\\', substr($validation->name, 1));
+        } elseif (\class_exists($validation->name)) {
+            $class = $validation->name;
         } elseif (str_starts_with($validation->name, '\\')) {
+            // 弃用的写法
             $class = $validation->name;
         } else {
             return null;
